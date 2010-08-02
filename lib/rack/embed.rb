@@ -15,7 +15,7 @@ module Rack
 
       # Replace this with something more sophisticated
       # Supported according to http://en.wikipedia.org/wiki/Data_URI_scheme
-      if !ua || ua !~ /WebKit|Gecko|Opera|Konqueror|MSIE 8.0/
+      if !ua || ua !~ /WebKit|Gecko|Opera|Konqueror|MSIE 8.0|CFNetwork/
         return @app.call(env)
       end
 
