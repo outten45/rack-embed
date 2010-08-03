@@ -34,7 +34,7 @@ module Rack
         base_dirname = Rails.root + "public"
       end
       embed_html = EmbedHtml::Embeder.new(body.first)
-      embed_html.path_dirname = base_dirname
+      embed_html.base_dirname = base_dirname
       body = embed_html.process
       header['Content-Length'] = Rack::Utils.bytesize(body).to_s
       
