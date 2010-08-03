@@ -26,12 +26,17 @@ module Rack
       original_env = env.clone
       response = @app.call(env)
       return response if !applies_to?(response)
-      
 
       status, header, body = response
-      body = EmbedHtml::Embeder.new(body.first).process
+      
+      base_dirname = nil
+      if Object.const_defined?('Rails')
+        base_dirname = Rails.root + "public"
+      end
+      embed_html = EmbedHtml::Embeder.new(body.first)
+      embed_html.path_dirname = base_dirname
+      body = embed_html.process
       header['Content-Length'] = Rack::Utils.bytesize(body).to_s
-
       
       [status, header, [body]]
     rescue Exception => ex
