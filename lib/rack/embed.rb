@@ -6,7 +6,7 @@ module Rack
   class Embed
     def initialize(app, opts = {})
       @app = app
-      @encode_param = opts[:encode_param]
+      @encode_param = opts[:encode_param] || :embed
       @mime_types = opts[:mime_types] || %w(application/xhtml+xml text/html)
     end
 
@@ -21,10 +21,11 @@ module Rack
 
       # only encode if the parameter exists
       request = Rack::Request.new(env)
-      return @app.call(env) unless request.params.key?(@encode_param)
       
       original_env = env.clone
       response = @app.call(env)
+      
+      return response unless response[1].delete('rackembed.request.embed') and request.params.key?(@encode_param)
       return response if !applies_to?(response)
 
       status, header, body = response
